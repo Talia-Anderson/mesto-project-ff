@@ -76,7 +76,7 @@ function addCard(imgLink, imgName) {
 /*кнопки*/
 function closePopup(modal) {
   modal.classList.remove('popup_is-opened');
-  window.removeEventListener('keydown', closePopup);
+  document.removeEventListener('keydown', closePopup);
 }
 
 function close(modal) {
@@ -90,7 +90,7 @@ const editWindow = document.querySelector('.popup_type_edit');
 
 editProfileButton.addEventListener('click', function(){
     editWindow.classList.add('popup_is-opened');
-    window.addEventListener('keydown', closePopup);
+    document.addEventListener('keydown', closePopup);
 });
 
 const profileAddButton = document.querySelector('.profile__add-button');
@@ -99,7 +99,7 @@ const profileAddCard = document.querySelector('.popup_type_new-card');
 profileAddButton.addEventListener('click', function() 
   {
     profileAddCard.classList.add('popup_is-opened');
-    window.addEventListener('keydown', closePopup);
+    document.addEventListener('keydown', closePopup);
   });
 
 close(profileAddCard);
@@ -118,14 +118,14 @@ document.addEventListener('keydown', function(evt) {
 });
 
 // const card = document.querySelector('.card');
+function like() {
+  content.querySelector('.card__like-button').addEventListener('click', function (evt) {
+  evt.target.classList.toggle('card__like-button_is-active')
+});
+}
 
-// card.addEventListener('click', function(evt) {
-//   if(evt.target.classList.contains('card__like-button')) {
-//     evt.target.classList.toggle('.card__like-button_is-active');
-//   }
-// });
-
-
+like();
+ 
 
 
 
