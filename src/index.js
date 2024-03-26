@@ -44,7 +44,6 @@ const content = document.querySelector('.places__list');
 // @todo: Функция создания карточки
 initialCards.forEach(initialCards => {
   const card = addCard(initialCards.link, initialCards.name);
-
   content.prepend(card);
   like();
 });
@@ -83,18 +82,24 @@ const editWindow = document.querySelector('.popup_type_edit');
 const profileAddButton = document.querySelector('.profile__add-button');
 const profileAddCard = document.querySelector('.popup_type_new-card');
 
-const handleClickOpen = () => {
-  const modal = document.querySelector('.popup');
-  openPopup(modal);
-}
+const cardImg = document.querySelector('.popup_type_image');
+const cardBtn = document.querySelector('.places__item');
 
-const handleClickEsc = () => {
-  const modal = document.querySelector('.popup');
-  closePopup(modal);
-}
+const modals = Array.from(document.querySelectorAll('.popup'));
 
+function handleClickEsc(evt) {
+  if(evt.key === 'Escape') {
+    const modal = document.querySelector('.popup_is-opened');
+    closePopup(modal);
+  }
+  else if (evt.type === 'click') {
+    const modal = document.querySelector('.popup_is-opened');
+    closePopup(modal);
+  }
+}
 
 function closePopup(modal) {
+  
   modal.classList.remove('popup_is-opened');
   document.removeEventListener('keydown', handleClickEsc);
 }
@@ -104,20 +109,22 @@ function openPopup(modal) {
   document.addEventListener('keydown', handleClickEsc);
 }
 
-editProfileButton.addEventListener('click', handleClickOpen);
-profileAddButton.addEventListener('click', handleClickOpen);
+editProfileButton.addEventListener('click', () => openPopup(editWindow));
+profileAddButton.addEventListener('click', () => openPopup(profileAddCard));
+cardBtn.addEventListener('click', () => openPopup(cardImg));
 
-editWindow.addEventListener('click', handleClickEsc);
-profileAddCard.addEventListener('click', handleClickEsc);
 
-document.addEventListener('keydown', function(evt) {
-  if(evt.key === 'Escape') {
-    document.addEventListener('keydown', handleClickEsc);
+modals.forEach(modal => {
+  modal.querySelector('.popup__close').addEventListener('click', () => closePopup(modal));
+  window.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    closePopup(modal);
   }
+  })
 });
 
-
 // лайк
+
 function like() {
   content.querySelector('.card__like-button').addEventListener('click', function (evt) {
   evt.target.classList.toggle('card__like-button_is-active')
@@ -126,6 +133,7 @@ function like() {
  
 //сабмит
 
+const submitBtn = document.querySelector('.popup__button');
 const formElement = document.querySelector('.popup__form');
 const nameInput = document.querySelector('.popup__input_type_name');
 const jobInput = document.querySelector('.popup__input_type_description');
@@ -134,12 +142,25 @@ function handleFormSubmit(evt) {
   evt.preventDefault();
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
+  submitBtn.addEventListener('click', handleClickEsc);
 }
 
 formElement.addEventListener('submit', handleFormSubmit); 
 
 
+//добавление карточки
 
+const cardNameInput = document.querySelector('.popup__input_type_card-name');
+const linkInput = document.querySelector('.popup__input_type_url');
+
+function handleCardSubmit(evt) {
+  evt.preventDefault();
+  console.log(linkInput.value);
+  addCard(linkInput.value, cardNameInput.value);
+  submitBtn.addEventListener('click', handleClickEsc);
+}
+
+formElement.addEventListener('submit', handleCardSubmit);
 
 /*просто для проверки работоспособности*/
 // const addButton = document.querySelector('.profile__edit-button');
