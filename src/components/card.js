@@ -1,16 +1,7 @@
 
-import {openImgPopup} from './modal.js';
-
-const content = document.querySelector('.places__list');
-
-function add(cardData) {
-  const card = newCard(cardData, delCard, likeCard, openImgPopup);
-  content.prepend(card);
-}
-
 function newCard(cardData, delCard, likeCard, imgPopup) {
-  const temp = document.querySelector('#card-template').content;
-  const elem = temp.querySelector('.card').cloneNode(true);
+  const cardTemplate = document.querySelector('#card-template').content;
+  const elem = cardTemplate.querySelector('.card').cloneNode(true);
   const title = elem.querySelector('.card__title');
   const img = elem.querySelector('.card__image');
   const delBtn = elem.querySelector('.card__delete-button');
@@ -40,4 +31,4 @@ function likeCard(event) {
    listPoint.remove();
  }
 
-export {add, likeCard, delCard};
+export {newCard, likeCard, delCard};
