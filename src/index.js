@@ -123,14 +123,11 @@ function handleClickEsc(evt) {
 function closePopup(modal) {
   
   modal.classList.remove('popup_is-opened');
-  modal.classList.remove('popup_is-animated');
   document.removeEventListener('keydown', handleClickEsc);
 }
 
 function openPopup(modal) {
-  
   modal.classList.add('popup_is-opened');
-  modal.classList.add('popup_is-animated');
   document.addEventListener('keydown', handleClickEsc);
 }
 
@@ -168,23 +165,23 @@ formProfileElement.addEventListener('submit', handleFormSubmit);
 //добавление карточки
 
 const formAddCardElement = profileAddCard.querySelector('.popup__form');
-const cardNameInput = document.querySelector('.popup__input_type_card-name');
-const linkInput = document.querySelector('.popup__input_type_url');
-const formedURL = new URL(linkInput.value, import.meta.url)
-const cardInfo = [
-{
-  name: cardNameInput.value,
-  link: formedURL,
-}
-]
 
-console.log(cardInfo);
 
 const submitAddCardBtn = formProfileElement.querySelector('.popup__button');
 
 
 function handleCardSubmit(evt) {
   evt.preventDefault();
+  const cardNameInput = formAddCardElement.querySelector('.popup__input_type_card-name');
+  const linkInput = formAddCardElement.querySelector('.popup__input_type_url');
+  const formedURL = new URL(linkInput.value, import.meta.url)
+  console.log(cardInfo);
+  const cardInfo = [
+    {
+      name: cardNameInput.value,
+      link: formedURL,
+    }
+  ]
   add(cardInfo);
   submitAddCardBtn.addEventListener('click', handleClickEsc);
 }
