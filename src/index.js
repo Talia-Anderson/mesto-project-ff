@@ -3,7 +3,7 @@
  import { initialCards } from './components/cards.js';
  import {closePopup, openPopup} from './components/modal.js';
  import {newCard, likeCard, delCard} from './components/card.js'
-
+ import { enableValidation } from './components/validation.js';
 //добавление карточки
 
 const content = document.querySelector('.places__list');
@@ -87,3 +87,18 @@ function handleCardSubmit(evt) {
 formProfileElement.addEventListener('submit', submitEditProfileForm); 
 
 formAddCardElement.addEventListener('submit', handleCardSubmit);
+
+//sprint 7
+
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_active'
+}); 
+
