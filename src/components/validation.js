@@ -3,7 +3,8 @@
 const isValid = (formElement, inputElement) => {
 
   if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+    const error = inputElement.dataset.errorMessage;
+    inputElement.setCustomValidity(error);
   } else {
     inputElement.setCustomValidity("");
   }
@@ -16,15 +17,16 @@ const isValid = (formElement, inputElement) => {
 };
 
 const showInputError = (formElement, inputElement, errorMessage) => {
-  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.add('popup__input-error');
+  const errorElement = formElement.querySelector(`.popup__input-error`);
+  
+  inputElement.classList.add('popup__input_type_error');
   errorElement.textContent = errorMessage;
   errorElement.classList.add('popup__input-error_active');
 };
 
 const hideInputError = (formElement, inputElement) => {
-  const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-  inputElement.classList.remove('popup__input-error');
+  const errorElement = formElement.querySelector(`.popup__input-error`);
+  inputElement.classList.remove('popup__input_type_error');
   errorElement.textContent = "";
   errorElement.classList.remove('popup__input-error_active');
 };
