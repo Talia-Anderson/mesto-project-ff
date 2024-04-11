@@ -3,7 +3,7 @@
  import { initialCards } from './components/cards.js';
  import {closePopup, openPopup} from './components/modal.js';
  import {newCard, likeCard, delCard} from './components/card.js'
- import { enableValidation } from './components/validation.js';
+ import { enableValidation, clearValidation } from './components/validation.js';
 //добавление карточки
 
 const content = document.querySelector('.places__list');
@@ -102,3 +102,4 @@ enableValidation({
   errorClass: 'popup__input-error_active'
 }); 
 
+// clearValidation(document.querySelector('.popup__form'));
