@@ -32,6 +32,13 @@ const formProfileElement = popupEditProfile.querySelector('.popup__form');
 const nameInput = formProfileElement.querySelector('.popup__input_type_name');
 const jobInput = formProfileElement.querySelector('.popup__input_type_description');
 
+// const avatar = document.querySelector('.profile__image');
+// const changeAvatar = document.querySelector('.')
+
+// avatar.addEventListener('mouseclick', function() {
+//   avatar.classList.add('overlay');
+// })
+
 function openImgPopup(data) {
   const cardTxt = cardImg.querySelector('.popup__caption');
   const cardPic = cardImg.querySelector('.popup__image');
@@ -90,9 +97,6 @@ formAddCardElement.addEventListener('submit', handleCardSubmit);
 
 //sprint 7
 
-// включение валидации вызовом enableValidation
-// все настройки передаются при вызове
-
 enableValidation({
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
@@ -103,3 +107,21 @@ enableValidation({
 }); 
 
 // clearValidation(document.querySelector('.popup__form'));
+
+//api
+
+fetch('https://nomoreparties.co/v1/wff-cohort-10/users/me', {
+   headers: {
+     authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f'
+   }
+ })
+   .then(res => res.json())
+   .then((result) => {
+     console.log(result.avatar);
+     const JSONName = JSON.stringify(result.name);
+     const JSONAbout = JSON.stringify(result.about);
+     const JSONAvatar = JSON.stringify(result.avatar);
+     document.querySelector('#name').innerHTML = JSONName;
+     document.querySelector('#about').innerHTML = JSONAbout;
+     document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
+   }); 
