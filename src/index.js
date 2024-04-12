@@ -71,6 +71,17 @@ modals.forEach(modal => {
 
 function submitEditProfileForm(evt) {
   evt.preventDefault();
+  fetch('https://nomoreparties.co/v1/wff-cohort-10/users/me', {
+  method: 'PATCH',
+  headers: {
+    authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: nameInput.value,
+    about: jobInput.value
+  })
+  }); 
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
   closePopup(popupEditProfile);
