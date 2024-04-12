@@ -8,7 +8,7 @@
 
 const content = document.querySelector('.places__list');
 
-initialCards.forEach(addCard);
+// initialCards.forEach(addCard);
 
 function addCard(cardData) {
   const card = newCard(cardData, delCard, likeCard, openImgPopup);
@@ -110,6 +110,8 @@ enableValidation({
 
 //api
 
+//запрос для профиля
+
 fetch('https://nomoreparties.co/v1/wff-cohort-10/users/me', {
    headers: {
      authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f'
@@ -120,8 +122,33 @@ fetch('https://nomoreparties.co/v1/wff-cohort-10/users/me', {
      console.log(result.avatar);
      const JSONName = JSON.stringify(result.name);
      const JSONAbout = JSON.stringify(result.about);
-     const JSONAvatar = JSON.stringify(result.avatar);
      document.querySelector('#name').innerHTML = JSONName;
      document.querySelector('#about').innerHTML = JSONAbout;
      document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
    }); 
+
+// запрос для добавления уже имеющихся карточек
+
+   fetch('https://nomoreparties.co/v1/wff-cohort-10/cards', {
+    headers: {
+      authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f'
+    }
+  })
+    .then(res => res.json())
+    .then((results) => {
+      console.log(results);
+
+      results.forEach((result) => {
+        const JSONLink = new URL(result.link, import.meta.url);
+        const JSONName = JSON.stringify(result.name);
+        const JSONCardInfo = {
+          name: JSONName,
+          link: JSONLink
+        };
+        console.log(JSONCardInfo);
+        addCard(JSONCardInfo);
+
+      });
+      
+    });
+   
