@@ -37,6 +37,10 @@ const popupChangeAvatar = document.querySelector('.popup_type_new-avatar');
 const formChangeAvatar = popupChangeAvatar.querySelector('.popup__form');
 const avatartURLInput = formChangeAvatar.querySelector('#popup__input-avatar');
 
+const closeAvatar = popupChangeAvatar.querySelector('.popup__button');
+const closeProfile = popupEditProfile.querySelector('.popup__button');
+const closeCard = popupAddCard.querySelector('.popup__button');
+
 // const avatar = document.querySelector('.profile__image');
 // const changeAvatar = document.querySelector('.')
 
@@ -61,6 +65,7 @@ function submitAvatarURL(evt) {
   .then((result) => {
      document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
    }); 
+   closeAvatar.innerHTML = 'Сохранение...';
   closePopup(popupChangeAvatar);
 };
 
@@ -75,7 +80,6 @@ function openImgPopup(data) {
   cardTxt.textContent = data.name;
   cardPic.src = data.link;
   cardPic.alt = data.name;
-
   openPopup(cardImg);
 } 
 
@@ -93,6 +97,7 @@ modals.forEach(modal => {
   modal.querySelector('.popup__close').addEventListener('click', () => closePopup(modal));
   window.addEventListener('click', (event) => {
   if (event.target === modal) {
+    
     closePopup(modal);
   }
   })
@@ -115,6 +120,7 @@ function submitEditProfileForm(evt) {
 
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
+  closeProfile.innerHTML = 'Сохранение...';
   closePopup(popupEditProfile);
 }
 
@@ -145,6 +151,7 @@ function handleCardSubmit(evt) {
       cardID: res._id
     };
     addCard(cardInfo);
+    closeCard.innerHTML = 'Сохранение...';
     closePopup(popupAddCard);
   })
 }
