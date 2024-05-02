@@ -14,7 +14,9 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div id = "avatar" class="profile__image"></div>
+      <div id = "avatar" class="profile__image">
+        <div type = "button" class="overlay"></div>
+      </div>
       <div class="profile__info">
         <h1 id = "name" class="profile__title"></h1>
         <button class="profile__edit-button" id="popup_type_edit" type="button"></button>
@@ -100,10 +102,10 @@
     </div>
   </div>
 
-  <div class="popup popup_type_new-card popup_is-animated">
+  <div class="popup popup_type_new-avatar popup_is-animated">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
-      <h3 class="popup__title">Новое место</h3>
+      <h3 class="popup__title">Обновить аватар</h3>
       <form class="popup__form" name="avatar" novalidate>
         <input 
           id = "popup__input-avatar"

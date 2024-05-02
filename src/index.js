@@ -31,7 +31,11 @@ const formAddCardElement = popupAddCard.querySelector('.popup__form');
 const formProfileElement = popupEditProfile.querySelector('.popup__form');
 const nameInput = formProfileElement.querySelector('.popup__input_type_name');
 const jobInput = formProfileElement.querySelector('.popup__input_type_description');
-const likeCount = Array.from(document.querySelectorAll('#counter'));
+
+const openAvatarButton = document.querySelector('.overlay');
+const popupChangeAvatar = document.querySelector('.popup_type_new-avatar');
+const formChangeAvatar = popupChangeAvatar.querySelector('.popup__form');
+const avatartURLInput = formChangeAvatar.querySelector('#popup__input-avatar');
 
 // const avatar = document.querySelector('.profile__image');
 // const changeAvatar = document.querySelector('.')
@@ -39,6 +43,30 @@ const likeCount = Array.from(document.querySelectorAll('#counter'));
 // avatar.addEventListener('mouseclick', function() {
 //   avatar.classList.add('overlay');
 // })
+
+function submitAvatarURL(evt) {
+   
+  evt.preventDefault();
+  fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me/avatar', {
+  method: 'PATCH',
+  headers: {
+    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
+    'Content-Type': 'application/json'
+   },
+   body: JSON.stringify({
+    avatar: avatartURLInput.value
+  })
+  })
+  .then(res => res.json())
+  .then((result) => {
+     document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
+   }); 
+  closePopup(popupChangeAvatar);
+};
+
+openAvatarButton.addEventListener('click', () => {
+  openPopup(popupChangeAvatar);
+});
 
 function openImgPopup(data) {
   const cardTxt = cardImg.querySelector('.popup__caption');
@@ -84,6 +112,7 @@ function submitEditProfileForm(evt) {
   })
   })
   .then(res => res.json()); 
+
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
   closePopup(popupEditProfile);
@@ -115,14 +144,12 @@ function handleCardSubmit(evt) {
       ownerID: res.owner._id,
       cardID: res._id
     };
-    console.log(cardInfo);
     addCard(cardInfo);
     closePopup(popupAddCard);
-    console.log(cardInfo);
   })
-  .catch (console.log('loading error'));
-  
 }
+
+formChangeAvatar.addEventListener('submit', submitAvatarURL)
 
 formProfileElement.addEventListener('submit', submitEditProfileForm); 
 
@@ -152,7 +179,6 @@ fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
  })
    .then(res => res.json())
    .then((result) => {
-     console.log(result);
      const JSONName = JSON.stringify(result.name);
      const JSONAbout = JSON.stringify(result.about);
      document.querySelector('#name').innerHTML = JSONName;
@@ -185,7 +211,6 @@ fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
       });
       
     })
-    .catch(console.log('loading cards error'));
    
 // запрос для добавления лайка
 
