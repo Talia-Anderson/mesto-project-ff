@@ -12,7 +12,7 @@ const content = document.querySelector('.places__list');
 
 function addCard(cardData) {
   const card = newCard(cardData, delCard, likeCard, openImgPopup);
-  content.prepend(card);
+  content.append(card);
 }
 
 /*кнопки попапов*/
@@ -31,6 +31,7 @@ const formAddCardElement = popupAddCard.querySelector('.popup__form');
 const formProfileElement = popupEditProfile.querySelector('.popup__form');
 const nameInput = formProfileElement.querySelector('.popup__input_type_name');
 const jobInput = formProfileElement.querySelector('.popup__input_type_description');
+const likeCount = Array.from(document.querySelectorAll('#counter'));
 
 // const avatar = document.querySelector('.profile__image');
 // const changeAvatar = document.querySelector('.')
@@ -71,17 +72,18 @@ modals.forEach(modal => {
 
 function submitEditProfileForm(evt) {
   evt.preventDefault();
-  fetch('https://nomoreparties.co/v1/wff-cohort-10/users/me', {
+  fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
   method: 'PATCH',
   headers: {
-    authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f',
+    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
     name: nameInput.value,
     about: jobInput.value
   })
-  }); 
+  })
+  .then(res => res.json()); 
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
   closePopup(popupEditProfile);
@@ -91,15 +93,35 @@ function handleCardSubmit(evt) {
   evt.preventDefault();
   const cardNameInput = formAddCardElement.querySelector('.popup__input_type_card-name');
   const linkInput = formAddCardElement.querySelector('.popup__input_type_url');
-  const formedLink = new URL(linkInput.value, import.meta.url)
-  const cardInfo = 
-    {
-      name: cardNameInput.value,
-      link: formedLink
-    };
+  let cardInfo;
   
-  addCard(cardInfo);
-  closePopup(popupAddCard);
+  fetch('https://nomoreparties.co/v1/wff-cohort-12/cards', {
+  method: 'POST',
+  headers: {
+    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
+    'Content-Type': 'application/json'
+    },
+  body: JSON.stringify({
+    name: cardNameInput.value,
+    link: linkInput.value
+  })
+  })
+  .then(res => res.json())
+  .then (res => {
+    cardInfo = {
+      name: res.name,
+      link: res.link,
+      likes: res.likes.length,
+      ownerID: res.owner._id,
+      cardID: res._id
+    };
+    console.log(cardInfo);
+    addCard(cardInfo);
+    closePopup(popupAddCard);
+    console.log(cardInfo);
+  })
+  .catch (console.log('loading error'));
+  
 }
 
 formProfileElement.addEventListener('submit', submitEditProfileForm); 
@@ -123,14 +145,14 @@ enableValidation({
 
 //запрос для профиля
 
-fetch('https://nomoreparties.co/v1/wff-cohort-10/users/me', {
+fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
    headers: {
-     authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f'
+     authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820'
    }
  })
    .then(res => res.json())
    .then((result) => {
-     console.log(result.avatar);
+     console.log(result);
      const JSONName = JSON.stringify(result.name);
      const JSONAbout = JSON.stringify(result.about);
      document.querySelector('#name').innerHTML = JSONName;
@@ -140,26 +162,31 @@ fetch('https://nomoreparties.co/v1/wff-cohort-10/users/me', {
 
 // запрос для добавления уже имеющихся карточек
 
-   fetch('https://nomoreparties.co/v1/wff-cohort-10/cards', {
+   fetch('https://nomoreparties.co/v1/wff-cohort-12/cards', {
     headers: {
-      authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f'
+      authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820'
     }
   })
     .then(res => res.json())
     .then((results) => {
-      console.log(results);
-
       results.forEach((result) => {
+        
         const JSONLink = new URL(result.link, import.meta.url);
         const JSONName = JSON.stringify(result.name);
         const JSONCardInfo = {
           name: JSONName,
-          link: JSONLink
+          link: JSONLink,
+          likes: result.likes.length,
+          ownerID: result.owner._id, 
+          cardID: result._id
         };
-        console.log(JSONCardInfo);
         addCard(JSONCardInfo);
 
       });
       
-    });
+    })
+    .catch(console.log('loading cards error'));
    
+// запрос для добавления лайка
+
+

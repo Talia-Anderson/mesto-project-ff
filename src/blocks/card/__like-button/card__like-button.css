@@ -18,3 +18,9 @@
 .card__like-button:hover {
   opacity: 0.6;
 }
+
+.card__like-counter {
+  display: grid;
+  grid-auto-flow: row;
+  justify-items: center;
+}
