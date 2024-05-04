@@ -56,7 +56,7 @@ function submitAvatarURL(evt) {
   .then((result) => {
      document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
    }); 
-   closeAvatar.innerHTML = 'Сохранение...';
+   closeAvatar.textContent = 'Сохранение...';
   closePopup(popupChangeAvatar);
 };
 
@@ -120,7 +120,7 @@ function submitEditProfileForm(evt) {
 
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
-  closeProfile.innerHTML = 'Сохранение...';
+  closeProfile.textContent = 'Сохранение...';
   closePopup(popupEditProfile);
 }
 
@@ -150,7 +150,7 @@ function handleCardSubmit(evt) {
       cardID: res._id
     };
     addCard(cardInfo);
-    closeCard.innerHTML = 'Сохранение...';
+    closeCard.textContent = 'Сохранение...';
     closePopup(popupAddCard);
   })
 }
@@ -185,8 +185,8 @@ fetch(`${config.baseUrl}/users/me`, {
    .then((result) => {
      const JSONName = result.name;
      const JSONAbout = result.about;
-     document.querySelector('#name').innerHTML = JSONName;
-     document.querySelector('#about').innerHTML = JSONAbout;
+     document.querySelector('#name').textContent = JSONName;
+     document.querySelector('#about').textContent = JSONAbout;
      document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
    }); 
 

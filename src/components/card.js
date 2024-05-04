@@ -16,7 +16,7 @@ function newCard(cardData, delCard, likeCard, imgPopup) {
 
   const counterField = elem.querySelector('#counter');
 
-  counterField.innerHTML = cardData.likes;
+  counterField.textContent = cardData.likes;
 
   delBtn.addEventListener('click', function(){delCard(event, cardData.cardID)});
   likeBtn.addEventListener('click', function(){likeCard(event, cardData.cardID, counterField)});
@@ -35,7 +35,7 @@ function newCard(cardData, delCard, likeCard, imgPopup) {
 
 function likeCard(event, ID, card) {
   const addLike = event.target.closest('.card__like-button');
-  
+
   if (addLike.classList.contains('card__like-button_is-active')) {
     fetch(`${config.baseUrl}/cards/likes/${ID}`, {
       method: 'DELETE',
@@ -44,7 +44,7 @@ function likeCard(event, ID, card) {
       .then(res => res.json())
       .then (res => {
         addLike.classList.remove('card__like-button_is-active');
-        card.innerHTML = res.likes.length;
+        card.textContent = res.likes.length;
       });
   }
   else {
@@ -55,7 +55,7 @@ function likeCard(event, ID, card) {
       .then(res => res.json())
       .then (res => {
         addLike.classList.add('card__like-button_is-active');
-        card.innerHTML = res.likes.length;
+        card.textContent = res.likes.length;
       });
   }
 
