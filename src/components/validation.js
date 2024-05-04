@@ -55,6 +55,7 @@ export const enableValidation = ({
   const formList = Array.from(document.querySelectorAll('.popup__form'));
     formList.forEach((fieldSet) => {
       setEventListeners(fieldSet);
+
     });
 };
 
@@ -83,5 +84,7 @@ export const clearValidation = (formElement) => {
   errorsLineList.forEach((error) => {
     error.classList.remove('popup__input-error_active');
   })
-  
+  const activeButtons = formElement.querySelectorAll('.popup__button');
+    activeButtons.classList.add('popup__button_disabled');
+
 }

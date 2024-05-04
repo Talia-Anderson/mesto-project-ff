@@ -1,4 +1,6 @@
 
+import {config} from './api.js';
+
 function newCard(cardData, delCard, likeCard, imgPopup) {
   
   const cardTemplate = document.querySelector('#card-template').content;
@@ -33,44 +35,39 @@ function newCard(cardData, delCard, likeCard, imgPopup) {
 
 function likeCard(event, ID, card) {
   const addLike = event.target.closest('.card__like-button');
-  fetch(`https://nomoreparties.co/v1/wff-cohort-12/cards/likes/${ID}`, {
-  method: 'PUT',
-  headers: {
-    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
-    'Content-Type': 'application/json'
-  },
-  })
-  .then(res => res.json())
-  .then (res => {
-    addLike.classList.add('card__like-button_is-active');
-    card.innerHTML = res.likes.length;
-  });
-
-  fetch(`https://nomoreparties.co/v1/wff-cohort-12/cards/likes/${ID}`, {
-  method: 'DELETE',
-  headers: {
-    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
-    'Content-Type': 'application/json'
-  },
-  })
-  .then(res => res.json())
-  .then (res => {
-    addLike.classList.remove('card__like-button_is-active');
-    card.innerHTML = res.likes.length;
-  });
   
+  if (addLike.classList.contains('card__like-button_is-active')) {
+    fetch(`${config.baseUrl}/cards/likes/${ID}`, {
+      method: 'DELETE',
+      headers: config.headers,
+      })
+      .then(res => res.json())
+      .then (res => {
+        addLike.classList.remove('card__like-button_is-active');
+        card.innerHTML = res.likes.length;
+      });
+  }
+  else {
+    fetch(`${config.baseUrl}/cards/likes/${ID}`, {
+      method: 'PUT',
+      headers: config.headers,
+      })
+      .then(res => res.json())
+      .then (res => {
+        addLike.classList.add('card__like-button_is-active');
+        card.innerHTML = res.likes.length;
+      });
+  }
+
 }
 
 function delCard(event, ID) {
   const listPoint = event.target.closest('.places__item');
   listPoint.remove();
 
-  fetch(`https://nomoreparties.co/v1/wff-cohort-12/cards/${ID}`, {
+  fetch(`${config.baseUrl}/cards/${ID}`, {
   method: 'DELETE',
-  headers: {
-    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
-    'Content-Type': 'application/json'
-    },
+  headers: config.headers,
   }); 
 }
 

@@ -1,6 +1,7 @@
 
  import './index.css';
- import { initialCards } from './components/cards.js';
+ import {getInitialCards, getProfileInfo, config} from './components/api.js';
+//  import { initialCards } from './components/cards.js';
  import {closePopup, openPopup} from './components/modal.js';
  import {newCard, likeCard, delCard} from './components/card.js'
  import { enableValidation, clearValidation } from './components/validation.js';
@@ -8,9 +9,7 @@
 
 const content = document.querySelector('.places__list');
 
-// initialCards.forEach(addCard);
-
-function addCard(cardData) {
+export function addCard(cardData) {
   const card = newCard(cardData, delCard, likeCard, openImgPopup);
   content.append(card);
 }
@@ -41,22 +40,14 @@ const closeAvatar = popupChangeAvatar.querySelector('.popup__button');
 const closeProfile = popupEditProfile.querySelector('.popup__button');
 const closeCard = popupAddCard.querySelector('.popup__button');
 
-// const avatar = document.querySelector('.profile__image');
-// const changeAvatar = document.querySelector('.')
-
-// avatar.addEventListener('mouseclick', function() {
-//   avatar.classList.add('overlay');
-// })
+//изменение аватара
 
 function submitAvatarURL(evt) {
    
   evt.preventDefault();
-  fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me/avatar', {
+  fetch(`${config.baseUrl}/users/me/avatar`, {
   method: 'PATCH',
-  headers: {
-    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
-    'Content-Type': 'application/json'
-   },
+  headers: config.headers,
    body: JSON.stringify({
     avatar: avatartURLInput.value
   })
@@ -69,9 +60,13 @@ function submitAvatarURL(evt) {
   closePopup(popupChangeAvatar);
 };
 
+// открытие попапа аватара
+
 openAvatarButton.addEventListener('click', () => {
   openPopup(popupChangeAvatar);
 });
+
+// открытие попапа картинки
 
 function openImgPopup(data) {
   const cardTxt = cardImg.querySelector('.popup__caption');
@@ -83,6 +78,8 @@ function openImgPopup(data) {
   openPopup(cardImg);
 } 
 
+// открытие попапа профиля
+
 editProfileButton.addEventListener('click', () => {
   const profileName = document.querySelector('.profile__title');
   const profileDescription = document.querySelector('.profile__description');
@@ -91,7 +88,11 @@ editProfileButton.addEventListener('click', () => {
   openPopup(popupEditProfile)
 });
 
+// открытие попапа карточки
+
 profileAddButton.addEventListener('click', () => openPopup(popupAddCard));
+
+// закрытие модалок
 
 modals.forEach(modal => {
   modal.querySelector('.popup__close').addEventListener('click', () => closePopup(modal));
@@ -103,14 +104,13 @@ modals.forEach(modal => {
   })
 });
 
+// сабмит изменений профиля
+
 function submitEditProfileForm(evt) {
   evt.preventDefault();
-  fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
+  fetch(`${config.baseUrl}/users/me`, {
   method: 'PATCH',
-  headers: {
-    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
-    'Content-Type': 'application/json'
-  },
+  headers: config.headers,
   body: JSON.stringify({
     name: nameInput.value,
     about: jobInput.value
@@ -124,18 +124,17 @@ function submitEditProfileForm(evt) {
   closePopup(popupEditProfile);
 }
 
+// сабмит карточки
+
 function handleCardSubmit(evt) {
   evt.preventDefault();
   const cardNameInput = formAddCardElement.querySelector('.popup__input_type_card-name');
   const linkInput = formAddCardElement.querySelector('.popup__input_type_url');
   let cardInfo;
   
-  fetch('https://nomoreparties.co/v1/wff-cohort-12/cards', {
+  fetch(`${config.baseUrl}/cards`, {
   method: 'POST',
-  headers: {
-    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
-    'Content-Type': 'application/json'
-    },
+  headers: config.headers,
   body: JSON.stringify({
     name: cardNameInput.value,
     link: linkInput.value
@@ -156,13 +155,15 @@ function handleCardSubmit(evt) {
   })
 }
 
+// работа с формами
+
 formChangeAvatar.addEventListener('submit', submitAvatarURL)
 
 formProfileElement.addEventListener('submit', submitEditProfileForm); 
 
 formAddCardElement.addEventListener('submit', handleCardSubmit);
 
-//sprint 7
+// валидация
 
 enableValidation({
   formSelector: '.popup__form',
@@ -173,21 +174,17 @@ enableValidation({
   errorClass: 'popup__input-error_active'
 }); 
 
-// clearValidation(document.querySelector('.popup__form'));
-
-//api
+//clearValidation(document.querySelector('.popup__form'));
 
 //запрос для профиля
 
-fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
-   headers: {
-     authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820'
-   }
+fetch(`${config.baseUrl}/users/me`, {
+   headers: config.headers
  })
    .then(res => res.json())
    .then((result) => {
-     const JSONName = JSON.stringify(result.name);
-     const JSONAbout = JSON.stringify(result.about);
+     const JSONName = result.name;
+     const JSONAbout = result.about;
      document.querySelector('#name').innerHTML = JSONName;
      document.querySelector('#about').innerHTML = JSONAbout;
      document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
@@ -195,17 +192,15 @@ fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
 
 // запрос для добавления уже имеющихся карточек
 
-   fetch('https://nomoreparties.co/v1/wff-cohort-12/cards', {
-    headers: {
-      authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820'
-    }
+   fetch(`${config.baseUrl}/cards`, {
+    headers: config.headers
   })
     .then(res => res.json())
     .then((results) => {
       results.forEach((result) => {
         
         const JSONLink = new URL(result.link, import.meta.url);
-        const JSONName = JSON.stringify(result.name);
+        const JSONName = result.name;
         const JSONCardInfo = {
           name: JSONName,
           link: JSONLink,
@@ -218,7 +213,6 @@ fetch('https://nomoreparties.co/v1/wff-cohort-12/users/me', {
       });
       
     })
-   
-// запрос для добавления лайка
+
 
 

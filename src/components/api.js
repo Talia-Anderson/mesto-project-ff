@@ -1,10 +1,8 @@
 
-return fetch('https://nomoreparties.co/v1/wff-cohort-10/cards', {
-   headers: {
-     authorization: 'b0363792-c5e5-45fc-92f6-19570476fd4f'
-   }
- })
-   .then(res => res.json())
-   .then((result) => {
-     console.log(result);
-   }); 
+export const config = {
+  baseUrl: 'https://nomoreparties.co/v1/wff-cohort-12',
+  headers: {
+    authorization: 'bbcf2270-d3d0-40fa-b649-4e22b6be7820',
+    'Content-Type': 'application/json'
+  }
+};
