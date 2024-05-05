@@ -41,8 +41,9 @@ function likeCard(event, ID, card) {
       method: 'DELETE',
       headers: config.headers,
       })
-      .then(res => res.json())
-      .then (res => {
+      .then(res => {if(res.ok) return res.json()})
+      .catch((err) => alert(err))
+      .finally (res => {
         addLike.classList.remove('card__like-button_is-active');
         card.textContent = res.likes.length;
       });
@@ -52,8 +53,9 @@ function likeCard(event, ID, card) {
       method: 'PUT',
       headers: config.headers,
       })
-      .then(res => res.json())
-      .then (res => {
+      .then(res => {if(res.ok) return res.json()})
+      .catch((err) => alert(err))
+      .finally (res => {
         addLike.classList.add('card__like-button_is-active');
         card.textContent = res.likes.length;
       });

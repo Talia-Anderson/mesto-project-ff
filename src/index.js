@@ -52,11 +52,12 @@ function submitAvatarURL(evt) {
     avatar: avatartURLInput.value
   })
   })
-  .then(res => res.json())
+  .then(res => {if(res.ok) return res.json()})
+  .catch((err) => alert(err))
   .then((result) => {
      document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
    }); 
-   closeAvatar.textContent = 'Сохранение...';
+  closeAvatar.textContent = 'Сохранение...';
   closePopup(popupChangeAvatar);
 };
 
@@ -98,7 +99,6 @@ modals.forEach(modal => {
   modal.querySelector('.popup__close').addEventListener('click', () => closePopup(modal));
   window.addEventListener('click', (event) => {
   if (event.target === modal) {
-    
     closePopup(modal);
   }
   })
@@ -116,7 +116,8 @@ function submitEditProfileForm(evt) {
     about: jobInput.value
   })
   })
-  .then(res => res.json()); 
+  .then(res => {if(res.ok) return res.json()})
+  .catch((err) => alert(err)) 
 
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
@@ -140,7 +141,8 @@ function handleCardSubmit(evt) {
     link: linkInput.value
   })
   })
-  .then(res => res.json())
+  .then(res => {if(res.ok) return res.json()})
+  .catch((err) => alert(err))
   .then (res => {
     cardInfo = {
       name: res.name,
@@ -149,6 +151,8 @@ function handleCardSubmit(evt) {
       ownerID: res.owner._id,
       cardID: res._id
     };
+  })
+  .finally(res => {
     addCard(cardInfo);
     closeCard.textContent = 'Сохранение...';
     closePopup(popupAddCard);
@@ -164,15 +168,16 @@ formProfileElement.addEventListener('submit', submitEditProfileForm);
 formAddCardElement.addEventListener('submit', handleCardSubmit);
 
 // валидация
-
-enableValidation({
+let classes = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__input-error_active'
-}); 
+};
+
+enableValidation(classes); 
 
 //clearValidation(document.querySelector('.popup__form'));
 
@@ -181,8 +186,9 @@ enableValidation({
 fetch(`${config.baseUrl}/users/me`, {
    headers: config.headers
  })
-   .then(res => res.json())
-   .then((result) => {
+    .then(res => {if(res.ok) return res.json()})
+    .catch((err) => alert(err))
+    .then((result) => {
      const JSONName = result.name;
      const JSONAbout = result.about;
      document.querySelector('#name').textContent = JSONName;
@@ -195,7 +201,8 @@ fetch(`${config.baseUrl}/users/me`, {
    fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-    .then(res => res.json())
+    .then(res => {if(res.ok) return res.json()})
+    .catch((err) => alert(err))
     .then((results) => {
       results.forEach((result) => {
         
