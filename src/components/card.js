@@ -1,5 +1,5 @@
 
-import {config} from './api.js';
+import {setLike, delLike, delCardFromServer} from './api.js';
 
 function newCard(cardData, delCard, likeCard, imgPopup) {
   
@@ -35,42 +35,18 @@ function newCard(cardData, delCard, likeCard, imgPopup) {
 
 function likeCard(event, ID, card) {
   const addLike = event.target.closest('.card__like-button');
-
   if (addLike.classList.contains('card__like-button_is-active')) {
-    fetch(`${config.baseUrl}/cards/likes/${ID}`, {
-      method: 'DELETE',
-      headers: config.headers,
-      })
-      .then(res => {if(res.ok) return res.json()})
-      .catch((err) => alert(err))
-      .finally (res => {
-        addLike.classList.remove('card__like-button_is-active');
-        card.textContent = res.likes.length;
-      });
+    delLike(ID, addLike, card);
   }
   else {
-    fetch(`${config.baseUrl}/cards/likes/${ID}`, {
-      method: 'PUT',
-      headers: config.headers,
-      })
-      .then(res => {if(res.ok) return res.json()})
-      .catch((err) => alert(err))
-      .finally (res => {
-        addLike.classList.add('card__like-button_is-active');
-        card.textContent = res.likes.length;
-      });
+    setLike(ID, addLike, card);
   }
-
 }
 
 function delCard(event, ID) {
   const listPoint = event.target.closest('.places__item');
   listPoint.remove();
-
-  fetch(`${config.baseUrl}/cards/${ID}`, {
-  method: 'DELETE',
-  headers: config.headers,
-  }); 
+  delCardFromServer(ID);
 }
 
 export {newCard, likeCard, delCard};
