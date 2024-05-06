@@ -1,6 +1,6 @@
 
  import './index.css';
- import {getInitialCards, getProfileInfo, config} from './components/api.js';
+ import {addInitialCards, addNewAvatar, addNewCard, addNewProfileInfo, config, getProfileData} from './components/api.js';
 //  import { initialCards } from './components/cards.js';
  import {closePopup, openPopup} from './components/modal.js';
  import {newCard, likeCard, delCard} from './components/card.js'
@@ -45,18 +45,7 @@ const closeCard = popupAddCard.querySelector('.popup__button');
 function submitAvatarURL(evt) {
    
   evt.preventDefault();
-  fetch(`${config.baseUrl}/users/me/avatar`, {
-  method: 'PATCH',
-  headers: config.headers,
-   body: JSON.stringify({
-    avatar: avatartURLInput.value
-  })
-  })
-  .then(res => {if(res.ok) return res.json()})
-  .catch((err) => alert(err))
-  .then((result) => {
-     document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
-   }); 
+  addNewAvatar(avatartURLInput);
   closeAvatar.textContent = 'Сохранение...';
   closePopup(popupChangeAvatar);
 };
@@ -108,17 +97,7 @@ modals.forEach(modal => {
 
 function submitEditProfileForm(evt) {
   evt.preventDefault();
-  fetch(`${config.baseUrl}/users/me`, {
-  method: 'PATCH',
-  headers: config.headers,
-  body: JSON.stringify({
-    name: nameInput.value,
-    about: jobInput.value
-  })
-  })
-  .then(res => {if(res.ok) return res.json()})
-  .catch((err) => alert(err)) 
-
+  addNewProfileInfo(nameInput, jobInput);
   document.querySelector('.profile__title').textContent = nameInput.value;
   document.querySelector('.profile__description').textContent = jobInput.value;
   closeProfile.textContent = 'Сохранение...';
@@ -132,31 +111,7 @@ function handleCardSubmit(evt) {
   const cardNameInput = formAddCardElement.querySelector('.popup__input_type_card-name');
   const linkInput = formAddCardElement.querySelector('.popup__input_type_url');
   let cardInfo;
-  
-  fetch(`${config.baseUrl}/cards`, {
-  method: 'POST',
-  headers: config.headers,
-  body: JSON.stringify({
-    name: cardNameInput.value,
-    link: linkInput.value
-  })
-  })
-  .then(res => {if(res.ok) return res.json()})
-  .catch((err) => alert(err))
-  .then (res => {
-    cardInfo = {
-      name: res.name,
-      link: res.link,
-      likes: res.likes.length,
-      ownerID: res.owner._id,
-      cardID: res._id
-    };
-  })
-  .finally(res => {
-    addCard(cardInfo);
-    closeCard.textContent = 'Сохранение...';
-    closePopup(popupAddCard);
-  })
+  addNewCard(closePopup, addCard, cardInfo, closeCard, cardNameInput, linkInput, popupAddCard);
 }
 
 // работа с формами
@@ -183,43 +138,11 @@ enableValidation(classes);
 
 //запрос для профиля
 
-fetch(`${config.baseUrl}/users/me`, {
-   headers: config.headers
- })
-    .then(res => {if(res.ok) return res.json()})
-    .catch((err) => alert(err))
-    .then((result) => {
-     const JSONName = result.name;
-     const JSONAbout = result.about;
-     document.querySelector('#name').textContent = JSONName;
-     document.querySelector('#about').textContent = JSONAbout;
-     document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
-   }); 
+getProfileData();
 
 // запрос для добавления уже имеющихся карточек
 
-   fetch(`${config.baseUrl}/cards`, {
-    headers: config.headers
-  })
-    .then(res => {if(res.ok) return res.json()})
-    .catch((err) => alert(err))
-    .then((results) => {
-      results.forEach((result) => {
-        
-        const JSONLink = new URL(result.link, import.meta.url);
-        const JSONName = result.name;
-        const JSONCardInfo = {
-          name: JSONName,
-          link: JSONLink,
-          likes: result.likes.length,
-          ownerID: result.owner._id, 
-          cardID: result._id
-        };
-        addCard(JSONCardInfo);
-
-      });
-      
-    })
+addInitialCards(addCard);
 
 
 
