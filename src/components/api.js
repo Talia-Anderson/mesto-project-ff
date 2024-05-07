@@ -1,4 +1,3 @@
-// import {addCard} from '../index.js';
 
 export const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-12',
@@ -8,15 +7,16 @@ export const config = {
   }
 };
 
-export const setLike = (ID, addLike, card) => {
-  fetch(`${config.baseUrl}/cards/likes/${ID}`, {
+
+export const setLike = (cardID, addLike, card) => {
+  fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
     method: 'PUT',
     headers: config.headers,
     })
     .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
     .catch((err) => console.log(err))
     .then (res => {
-      addLike.classList.add('card__like-button_is-active');
+      addLike.classList.toggle('card__like-button_is-active');
       card.textContent = res.likes.length;
     });
 };
@@ -29,7 +29,7 @@ export const delLike = (ID, addLike, card) => {
     .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
     .catch((err) => console.log(err))
     .then (res => {
-      addLike.classList.remove('card__like-button_is-active');
+      addLike.classList.toggle('card__like-button_is-active');
       card.textContent = res.likes.length;
     });
 };
@@ -45,7 +45,7 @@ export const addInitialCards = (addCard) => {
   fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-    .then(res => {if(res.ok) return res.json()})
+    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
     .catch((err) => console.log(err))
     .then((results) => {
       results.forEach((result) => {
@@ -54,7 +54,7 @@ export const addInitialCards = (addCard) => {
         const JSONCardInfo = {
           name: JSONName,
           link: JSONLink,
-          likes: result.likes.length,
+          likes: result.likes,
           ownerID: result.owner._id, 
           cardID: result._id
         };
@@ -68,8 +68,8 @@ export const getProfileData = () => {
   fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-     .then(res => {if(res.ok) return res.json()})
-     .catch((err) => console.log(err))
+    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
+    .catch((err) => console.log(err))
      .then((result) => {
       const JSONName = result.name;
       const JSONAbout = result.about;
@@ -88,8 +88,8 @@ export const addNewCard = (closePopup, addCard, cardInfo, closeCard, cardNameInp
       link: linkInput.value
     })
     })
-    .then(res => {if(res.ok) return res.json()})
-    .catch((err) => alert(err))
+    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
+    .catch((err) => console.log(err))
     .then (res => {
       cardInfo = {
         name: res.name,
@@ -115,8 +115,8 @@ export const addNewProfileInfo = (nameInput, jobInput) => {
       about: jobInput.value
     })
     })
-    .then(res => {if(res.ok) return res.json()})
-    .catch((err) => alert(err))
+    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
+    .catch((err) => console.log(err))
 };
 
 export const addNewAvatar = (avatartURLInput) => {
@@ -127,8 +127,8 @@ export const addNewAvatar = (avatartURLInput) => {
       avatar: avatartURLInput.value
     })
     })
-    .then(res => {if(res.ok) return res.json()})
-    .catch((err) => alert(err))
+    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
+    .catch((err) => console.log(err))
     .then((result) => {
        document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
      }); 

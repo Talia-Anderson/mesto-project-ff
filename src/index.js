@@ -1,7 +1,6 @@
 
  import './index.css';
- import {addInitialCards, addNewAvatar, addNewCard, addNewProfileInfo, config, getProfileData} from './components/api.js';
-//  import { initialCards } from './components/cards.js';
+ import {addInitialCards, addNewAvatar, addNewCard, addNewProfileInfo, getProfileData} from './components/api.js';
  import {closePopup, openPopup} from './components/modal.js';
  import {newCard, likeCard, delCard} from './components/card.js'
  import { enableValidation, clearValidation } from './components/validation.js';

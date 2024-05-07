@@ -16,10 +16,20 @@ function newCard(cardData, delCard, likeCard, imgPopup) {
 
   const counterField = elem.querySelector('#counter');
 
-  counterField.textContent = cardData.likes;
+  console.log(cardData.likes);
+  counterField.textContent = cardData.likes.length;
+
+  if (MyLike(cardData)) {
+    likeBtn.classList.toggle('card__like-button_is-active');
+  };
 
   delBtn.addEventListener('click', function(){delCard(event, cardData.cardID)});
-  likeBtn.addEventListener('click', function(){likeCard(event, cardData.cardID, counterField)});
+  
+  likeBtn.addEventListener('click', function()
+  {
+    likeCard(likeBtn, cardData.cardID, counterField);
+
+  });
 
   if(cardData.ownerID === 'a93de75c814e52d57e28a89d') {
     delBtn.classList.remove('hidden');
@@ -33,20 +43,33 @@ function newCard(cardData, delCard, likeCard, imgPopup) {
 
 }
 
-function likeCard(event, ID, card) {
-  const addLike = event.target.closest('.card__like-button');
-  if (addLike.classList.contains('card__like-button_is-active')) {
-    delLike(ID, addLike, card);
+function likeCard(likeBtn, ID, card) {
+  //isMyLike(ID);
+  if (likeBtn.classList.contains('card__like-button_is-active')) {
+    delLike(ID, likeBtn, card);
   }
   else {
-    setLike(ID, addLike, card);
+    setLike(ID, likeBtn, card);
   }
-}
+  
+};
 
 function delCard(event, ID) {
   const listPoint = event.target.closest('.places__item');
   listPoint.remove();
   delCardFromServer(ID);
 }
+
+function MyLike(card) {
+  let likeFlag = false;
+      for (let i = 0; i < card.likes.length && likeFlag != true; i+=1) {
+        if (card.likes[i]._id === 'a93de75c814e52d57e28a89d')
+        {
+           likeFlag = true;
+        }
+      };
+
+      return likeFlag;
+};
 
 export {newCard, likeCard, delCard};
