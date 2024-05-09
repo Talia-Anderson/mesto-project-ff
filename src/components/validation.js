@@ -45,7 +45,7 @@ const setEventListeners = (formElement, settings) => {
 };
 
 export const enableValidation = (settings) =>
-{
+{ console.log(settings);
   const formList = Array.from(document.querySelectorAll(settings.formSelector));
     formList.forEach((fieldSet) => {
       fieldSet.addEventListener('submit', (evt) => {
@@ -53,6 +53,7 @@ export const enableValidation = (settings) =>
       });
       setEventListeners(fieldSet, settings);
     });
+
 };
 
 const hasInvalidInput = (inputList) => {
@@ -71,23 +72,23 @@ const toggleButtonState = (inputList, buttonElement, settings) => {
   } 
 };
 
-/////////////////////////////////////////////////
-
-export const clearValidation = (formElement, settings = {formSelector,
-  inputSelector,
-  submitButtonSelector,
-  inactiveButtonClass,
-  inputErrorClass,
-  errorClass}) => {
-  const errorsList = Array.from(formElement.querySelectorAll(settings.inputErrorClass));
-  errorsList.forEach((error) => {
-    error.textContent = '';
+export const clearValidation = (formElement, settings) => {
+  console.log(settings); 
+  const button = Array.from(formElement.querySelectorAll(settings.submitButtonSelector));
+  button.forEach(elem => {
+    elem.classList.add(settings.inactiveButtonClass);
   });
-  const errorsLineList = Array.from(formElement.querySelectorAll(settings.errorClass));
-  errorsLineList.forEach((error) => {
-    error.classList.remove(settings.errorClass);
-  })
-  const activeButtons = formElement.querySelectorAll(settings.submitButtonSelector);
-    activeButtons.classList.add(settings.errorClass);
 
+  const errors = Array.from(formElement.querySelectorAll('span'))
+  errors.forEach(error => {
+    error.classList.remove(settings.errorClass);
+    error.textContent = '';
+  })
+
+  const inputs = Array.from(formElement.querySelectorAll(settings.inputSelector));
+  inputs.forEach(elem => {
+    console.log(elem);
+    elem.classList.remove(settings.inputErrorClass);
+    elem.value = '';
+  })
 }

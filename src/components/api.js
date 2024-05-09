@@ -1,4 +1,6 @@
 
+import {checkResponse} from './utils.js';
+
 export const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-12',
   headers: {
@@ -7,80 +9,61 @@ export const config = {
   }
 };
 
+//поставить лайк
 
-export const setLike = (cardID, addLike, card) => {
-  fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
+export const setLike = (cardID) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardID}`, {
     method: 'PUT',
     headers: config.headers,
     })
-    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
-    .catch((err) => console.log(err))
-    .then (res => {
-      addLike.classList.toggle('card__like-button_is-active');
-      card.textContent = res.likes.length;
-    });
+    .then(res => checkResponse(res))
+    
 };
 
-export const delLike = (ID, addLike, card) => {
-  fetch(`${config.baseUrl}/cards/likes/${ID}`, {
+//удалить лайк
+
+export const delLike = (ID) => {
+  return fetch(`${config.baseUrl}/cards/likes/${ID}`, {
     method: 'DELETE',
     headers: config.headers,
     })
-    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
-    .catch((err) => console.log(err))
-    .then (res => {
-      addLike.classList.toggle('card__like-button_is-active');
-      card.textContent = res.likes.length;
-    });
+    .then(res => checkResponse(res))
+    
 };
+
+//удалить карточку
 
 export const delCardFromServer = (ID) => {
-  fetch(`${config.baseUrl}/cards/${ID}`, {
+  return fetch(`${config.baseUrl}/cards/${ID}`, {
     method: 'DELETE',
     headers: config.headers,
     });
 };
 
-export const addInitialCards = (addCard) => {
-  fetch(`${config.baseUrl}/cards`, {
+//добавить карточки с сервера
+
+export const addInitialCards = () => {
+  return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
-    .catch((err) => console.log(err))
-    .then((results) => {
-      results.forEach((result) => {
-        const JSONLink = new URL(result.link, import.meta.url);
-        const JSONName = result.name;
-        const JSONCardInfo = {
-          name: JSONName,
-          link: JSONLink,
-          likes: result.likes,
-          ownerID: result.owner._id, 
-          cardID: result._id
-        };
-        addCard(JSONCardInfo);
-      });
-      
-    })
+    .then(res => checkResponse(res));
+    
 };
+
+// забрать с сервера профиль
 
 export const getProfileData = () => {
-  fetch(`${config.baseUrl}/users/me`, {
+  return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
-    .catch((err) => console.log(err))
-     .then((result) => {
-      const JSONName = result.name;
-      const JSONAbout = result.about;
-      document.querySelector('#name').textContent = JSONName;
-      document.querySelector('#about').textContent = JSONAbout;
-      document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
-    }); 
+    .then(res => checkResponse(res));
+   
 };
 
-export const addNewCard = (closePopup, addCard, cardInfo, closeCard, cardNameInput, linkInput, popupAddCard) => {
-  fetch(`${config.baseUrl}/cards`, {
+// добавить новую карточку
+
+export const addNewCard = (cardNameInput, linkInput) => {
+  return fetch(`${config.baseUrl}/cards`, {
     method: 'POST',
     headers: config.headers,
     body: JSON.stringify({
@@ -88,26 +71,14 @@ export const addNewCard = (closePopup, addCard, cardInfo, closeCard, cardNameInp
       link: linkInput.value
     })
     })
-    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
-    .catch((err) => console.log(err))
-    .then (res => {
-      cardInfo = {
-        name: res.name,
-        link: res.link,
-        likes: res.likes.length,
-        ownerID: res.owner._id,
-        cardID: res._id
-      };
-    })
-    .then(res => {
-      addCard(cardInfo);
-      closeCard.textContent = 'Сохранение...';
-      closePopup(popupAddCard);
-    })
+    .then(res => checkResponse(res))
+    
 };
 
+// добавить в профиль
+
 export const addNewProfileInfo = (nameInput, jobInput) => {
-  fetch(`${config.baseUrl}/users/me`, {
+  return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
@@ -115,21 +86,18 @@ export const addNewProfileInfo = (nameInput, jobInput) => {
       about: jobInput.value
     })
     })
-    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
-    .catch((err) => console.log(err))
+    .then(res => checkResponse(res))
 };
 
+// добавить аватар
+
 export const addNewAvatar = (avatartURLInput) => {
-  fetch(`${config.baseUrl}/users/me/avatar`, {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: config.headers,
      body: JSON.stringify({
       avatar: avatartURLInput.value
     })
     })
-    .then(res => {if(res.ok) {return res.json()} else {return Promise.reject(`Ошибка ${res.status}`);}})
-    .catch((err) => console.log(err))
-    .then((result) => {
-       document.querySelector('#avatar').style.backgroundImage = `url(${result.avatar})`;
-     }); 
+    .then(res => checkResponse(res))
 };
