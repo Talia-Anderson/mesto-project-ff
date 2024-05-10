@@ -1,5 +1,4 @@
 
-
 const isValid = (formElement, inputElement, settings) => {
 
   if (inputElement.validity.patternMismatch) {
@@ -74,21 +73,15 @@ const toggleButtonState = (inputList, buttonElement, settings) => {
 
 export const clearValidation = (formElement, settings) => {
   console.log(settings); 
-  const button = Array.from(formElement.querySelectorAll(settings.submitButtonSelector));
-  button.forEach(elem => {
-    elem.classList.add(settings.inactiveButtonClass);
-  });
-
-  const errors = Array.from(formElement.querySelectorAll('span'))
-  errors.forEach(error => {
-    error.classList.remove(settings.errorClass);
-    error.textContent = '';
-  })
-
+  const button = formElement.querySelector(settings.submitButtonSelector);
   const inputs = Array.from(formElement.querySelectorAll(settings.inputSelector));
+
   inputs.forEach(elem => {
     console.log(elem);
     elem.classList.remove(settings.inputErrorClass);
     elem.value = '';
+    hideInputError(formElement, elem, settings);
   })
+  toggleButtonState(inputs, button, settings);
+
 }

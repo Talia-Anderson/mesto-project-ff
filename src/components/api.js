@@ -37,7 +37,8 @@ export const delCardFromServer = (ID) => {
   return fetch(`${config.baseUrl}/cards/${ID}`, {
     method: 'DELETE',
     headers: config.headers,
-    });
+    })
+    .then(res => checkResponse(res));
 };
 
 //добавить карточки с сервера

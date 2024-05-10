@@ -68,6 +68,7 @@ function delCard(event, ID) {
   .then ((res) => {
     listPoint.remove();
   })
+  .catch((err) => console.log(err))
 }
 
 function isMyLike(card, currentID) {
